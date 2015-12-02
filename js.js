@@ -67,7 +67,11 @@ function draw() {
 
 	var code = input_code.value;
 	used_sliders = {};
-	var transform = eval('(function(x,y){\n'+code+'\nreturn [sx,sy];})');
+	try {
+		var transform = eval('(function(x,y){\n'+code+'\nreturn [sx,sy];})');
+	} catch(e) {
+		return;
+	}
 
 	ctx.drawImage(source,0,0,width,height);
 	var data = ctx.getImageData(0,0,width,height);
