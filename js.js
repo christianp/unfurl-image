@@ -47,11 +47,11 @@ function slider(name,start,end,value,step) {
 			end: end,
 			step: step
 		};
-		range.oninput = function() {
+		range.addEventListener('input',function() {
 			sliders[name].value = range.value;
 			display.innerText = sliders[name].value;
 			trigger_redraw();
-		};
+		},false);
 		return sliders[name].value;
 	}
 }
@@ -62,10 +62,8 @@ function draw() {
 	var height = source.clientHeight;
 	canvas.width = width*2;
 	canvas.height = height;
-	console.log(width,height);
 
 	precision = Math.floor(Math.max(precision,1));
-	console.log(precision);
 
 	var code = input_code.value;
 	used_sliders = {};
@@ -104,7 +102,7 @@ function draw() {
 	ctx.putImageData(out,600,0);
 }
 
-window.onload = draw;
+window.addEventListener('load',draw);
 
 var redraw = false;
 setInterval(function() {
@@ -122,4 +120,39 @@ function trigger_redraw() {
 	redraw = true; 
 }
 
-input_code.onkeyup = trigger_redraw;
+input_code.addEventListener('input', trigger_redraw, false);
+
+canvas.addEventListener('dragenter',function(e) {
+	canvas.classList.add('drag');
+	e.stopPropagation();
+	e.preventDefault();
+},false);
+canvas.addEventListener('dragover',function(e) {
+	e.stopPropagation();
+	e.preventDefault();
+},false);
+canvas.addEventListener('dragleave',function(e) {
+	canvas.classList.remove('drag');
+	e.stopPropagation();
+	e.preventDefault();
+},false);
+canvas.addEventListener('drop',function(e) {
+	canvas.classList.remove('drag');
+	e.stopPropagation();
+	e.preventDefault();
+
+	var dt = e.dataTransfer;
+	var file = dt.files[0];
+
+	if(!file.type.match(/^image\//)) {
+		return;
+	}
+	source.file = file;
+
+	var reader = new FileReader();
+	reader.onload = function(e) {
+		source.src = e.target.result;
+		trigger_redraw();
+	}
+	reader.readAsDataURL(file);
+},false);
