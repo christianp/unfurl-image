@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+	<head>
+		<style>
+			#source-container {
+				position: absolute;
+				left: -10000px;
+			}
+			#code {
+				width: 100%;
+				height: 20em;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="source-container">
+			<img id="source" src="source.png" width=600 height=600>
+		</div>
+		<canvas id="canvas" width=1200 height=600></canvas>
+
+		<div id="controls">
+			<textarea id="code">// given x and y in the destination, set sx and sy to the coords of the source you want to read
+// use the 'slider' function to make a parameter you can change
+var mult = slider('angle multiplier',0,10,2);
+var pow = slider('power',1,20,10);
+var y_mult = slider('y multiplier',1.8,2.5,2.18,0.01);
+var an = x*mult*Math.PI/width;
+var r = Math.pow(((y+height)/(y_mult*height)),pow)*height+32;
+var sx = Math.floor(Math.cos(an)*r+width/2);
+var sy = Math.floor(Math.sin(an)*r+height/2);
+</textarea>
+
+			<ul id="sliders">
+			</ul>
+		</div>
+
+
+		<script language="javascript" src="js.js"></script>
+	</body>
+</html>
